@@ -68,7 +68,35 @@ def user_detail(user_id):
     select id, email, ins_ts, upd_ts from users where id=%s
     ''', (user_id,))
 
+    permissions = flask_db.fetch_all('''
+    select p.id, p.name
+    from user_permissions up
+    join permissions p
+    on up.permission = p.id
+    where up.user = %s
+    ''', (user_id,))
     ctx = {
-        'details': user_data
+        'details': user_data,
+        'permissions': permissions,
     }
     return flask.render_template('user_detail.html.j2', **ctx)
+
+
+@app.route('/users/<int:user_id>/permissions', methods=['POST'])
+def add_user_permission(user_id):
+    permission_name = flask.request.form['permision_name']
+
+    permission_id = flask_db.insert('''
+    insert into permissions (name)
+    values (UPPER(%s))
+    on duplicate key update id=id
+    ''', (permission_name,))
+
+    flask_db.insert('''
+    insert into user_permissions (user, permission)
+    values (%s, %s)
+    ''', (user_id, permission_id))
+
+    return flask.redirect(
+        flask.url_for('user_detail', user_id=user_id)
+    )

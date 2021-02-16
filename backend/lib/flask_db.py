@@ -11,6 +11,7 @@ def _get_conn():
             port=3306
         )
         flask.g.mysql_conn = conn
+        conn.autocommit = True
 
     return flask.g.mysql_conn
 
@@ -32,4 +33,12 @@ def fetch_all(query, params):
         c.execute(query, params)
         out = c.fetchall()
 
+    return out
+
+
+def insert(query, params):
+    conn = _get_conn()
+    with conn.cursor() as c:
+        c.execute(query, params)
+        out = c.lastrowid
     return out

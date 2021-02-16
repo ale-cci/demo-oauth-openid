@@ -29,10 +29,18 @@
             </div>
             <div>
               <div class="column is-narrow">
-                <button class="button is-outlined">
-                  <span class="icon"> <i class="fas fa-plus"></i> </span>
-                  <span> Add permission </span>
-                </button>
+                <form action="{{url_for('add_user_permission', user_id=details.id)}}" method="POST">
+                  <div class="field">
+                    <span class="control has-icons-right">
+                      <input class="input" name="permision_name">
+                      <span class="icon is-small is-right">
+                        <i class="fas fa-plus"></i>
+                      </span>
+                      </a>
+                    </span>
+                  </div>
+
+                </form>
               </div>
             </div>
           </div>
