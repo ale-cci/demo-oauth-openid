@@ -1,0 +1,16 @@
+{% extends 'base.html.j2' %}
+{% block content %}
+  {% include 'fragments/navbar.html.j2' %}
+
+  <div class="content">
+    <div class="section">
+      <div class="card">
+        <form method="GET">
+          <div class="card-content">
+            <div class="title"> {{details.email}} </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+{% endblock %}

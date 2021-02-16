@@ -64,4 +64,11 @@ def users():
 
 @app.route('/users/<int:user_id>')
 def user_detail(user_id):
-    return flask.render_template('user_detail.html.j2')
+    user_data = flask_db.fetch_one('''
+    select id, email from users where id=%s
+    ''', (user_id,))
+
+    ctx = {
+        'details': user_data
+    }
+    return flask.render_template('user_detail.html.j2', **ctx)
