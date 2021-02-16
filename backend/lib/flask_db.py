@@ -1,14 +1,35 @@
+import flask
 import mysql.connector
 
 def _get_conn():
-    pass
+    if not hasattr(flask.g, 'mysql_conn'):
+        conn = mysql.connector.connect(
+            user='user',
+            database='db_name',
+            password='password',
+            host='db',
+            port=3306
+        )
+        flask.g.mysql_conn = conn
+
+    return flask.g.mysql_conn
 
 
-def fetch_one(query):
+def fetch_one(query, params):
     conn = _get_conn()
 
-    with conn.cursor(buffered=True, namedtuple=True) as c:
-        c.execute(query)
+    with conn.cursor(buffered=True, named_tuple=True) as c:
+        c.execute(query, params)
         out = c.fetchone()
+
+    return out
+
+
+def fetch_all(query, params):
+    conn = _get_conn()
+
+    with conn.cursor(buffered=True, named_tuple=True) as c:
+        c.execute(query, params)
+        out = c.fetchall()
 
     return out

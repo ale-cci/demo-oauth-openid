@@ -1,5 +1,6 @@
 import flask
 import auth
+from lib import flask_db
 
 app = flask.Flask(__name__)
 app.config.update(
@@ -18,9 +19,10 @@ def index():
 def login():
     return flask.render_template('login.html.j2')
 
+
 @app.route('/logout')
 def logout():
-    del flask.session.user_id
+    del flask.session['user_id']
     return flask.redirect(flask.url_for('login'))
 
 
@@ -32,8 +34,34 @@ def perform_login():
     email = flask.request.form['email']
     passwd = flask.request.form['password']
 
-    if user_id := auth.check_password(email, passwd):
-        flask.session['user_id'] = user_id
-        return flask.redirect(flask.url_for('index'))
+    try:
+        if user_id := auth.check_password(email, passwd):
+            flask.session['user_id'] = user_id
+            return flask.redirect(flask.url_for('index'))
+
+    except auth.AuthException as e:
+        flask.flash(('danger', str(e)))
 
     return flask.redirect(flask.url_for('login'))
+
+
+@app.route('/users')
+def users():
+    email_like = flask.request.args.get('email', '')
+    email_like = f'%{email_like}%'
+
+    users = flask_db.fetch_all('''
+    select id, email from users where email like %s limit 100
+    ''', (email_like,))
+
+
+    ctx = dict(flask.request.args)
+    ctx.update({
+        'users': users,
+    })
+    return flask.render_template('users.html.j2', **ctx)
+
+
+@app.route('/users/<int:user_id>')
+def user_detail(user_id):
+    return flask.render_template('user_detail.html.j2')

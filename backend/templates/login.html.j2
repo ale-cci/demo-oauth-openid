@@ -10,18 +10,22 @@
           <div class="title is-4"> Login </div>
           <form action="{{ url_for('perform_login') }}" method="POST">
 
-            <div class="field">
-              <label class="label">Email</label>
-              <div class="control">
-                <input class="input" type="email" name='email' placeholder="example@email.com">
-              </div>
-            </div>
 
             <div class="field">
-              <label class="label">Password</label>
-              <div class="control">
-                <input class="input" type="password" name='password' placeholder="*******">
-              </div>
+              <p class="control has-icons-left">
+                <input class="input" type="email" name="email" placeholder="Email">
+                <span class="icon is-small is-left">
+                  <i class="fas fa-envelope"></i>
+                </span>
+              </p>
+            </div>
+            <div class="field">
+              <p class="control has-icons-left">
+                <input class="input" name="password" type="password" placeholder="Password">
+                <span class="icon is-small is-left">
+                  <i class="fas fa-lock"></i>
+                </span>
+              </p>
             </div>
 
             <hr>
@@ -39,6 +43,15 @@
           </form>
         </div>
       </div>
+
+      {% with messages = get_flashed_messages() %}
+        <br>
+        {% for type, message in messages %}
+        <div class="notification is-{{type}}">
+          {{message}}
+        </div>
+        {% endfor %}
+      {% endwith %}
 
     </div>
   </div>

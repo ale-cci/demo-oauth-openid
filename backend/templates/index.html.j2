@@ -1,3 +1,17 @@
 {% extends 'base.html.j2' %}
 {% block content %}
+  {% include 'fragments/navbar.html.j2' %}
+  <div class="content">
+    <div class="section">
+
+      <a href="{{ url_for('users') }}">
+        <div class="card" >
+          <div class="card-content">
+            Manage users
+          </div>
+        </div>
+      </a>
+
+    </div>
+  </div>
 {% endblock %}
