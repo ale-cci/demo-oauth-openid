@@ -17,13 +17,11 @@ by:
 git clone git@bitbucket.org:ale-cci/demo-oauth-openid.git
 cd demo-oauth-openid
 ```
-
 2. Booting up mysql and the flask server
 ```
 docker-compose up -d
 ```
-
-3. Go to your browser and perform the login with credentials `test@email.com`
+3. Go to your browser on [http://localhost:8000](http://localhost:8000) and perform the login with credentials `test@email.com`
    and `test`
 
 
