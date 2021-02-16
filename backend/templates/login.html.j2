@@ -1,0 +1,46 @@
+{% extends 'base.html.j2' %}
+
+{% block content %}
+<div class="columns is-vcentered">
+  <div class="hero-body">
+    <div class="column is-4 is-offset-4">
+
+      <div class="card">
+        <div class="card-content">
+          <div class="title is-4"> Login </div>
+          <form action="{{ url_for('perform_login') }}" method="POST">
+
+            <div class="field">
+              <label class="label">Email</label>
+              <div class="control">
+                <input class="input" type="email" name='email' placeholder="example@email.com">
+              </div>
+            </div>
+
+            <div class="field">
+              <label class="label">Password</label>
+              <div class="control">
+                <input class="input" type="password" name='password' placeholder="*******">
+              </div>
+            </div>
+
+            <hr>
+            <div class="field">
+              <div class="columns">
+                <div class="column is-narrow">
+                  <input type="reset" class="button" value="reset">
+                </div>
+                <div class="column"> </div>
+                <div class="column is-narrow">
+                  <input type="submit" class="button" value="Submit">
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+{% endblock %}
