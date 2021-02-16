@@ -65,7 +65,7 @@ def users():
 @app.route('/users/<int:user_id>')
 def user_detail(user_id):
     user_data = flask_db.fetch_one('''
-    select id, email from users where id=%s
+    select id, email, ins_ts, upd_ts from users where id=%s
     ''', (user_id,))
 
     ctx = {

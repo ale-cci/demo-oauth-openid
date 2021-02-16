@@ -5,12 +5,48 @@
   <div class="content">
     <div class="section">
       <div class="card">
-        <form method="GET">
-          <div class="card-content">
-            <div class="title"> {{details.email}} </div>
+        <div class="card-content">
+          <div class="title"> {{details.email}} </div>
+
+          <div>
+            <b> Insertion date: </b>
+            <span> {{ details.ins_ts }} </span>
           </div>
-        </form>
+          <div>
+            <b> Last update: </b>
+            <span> {{ details.ins_ts }} </span>
+          </div>
+        </div>
       </div>
+
+      <br>
+
+      <div class="card">
+        <div class="card-content">
+          <div class="columns">
+            <div class="column">
+              <div class="title is-4"> User permissions </div>
+            </div>
+            <div>
+              <div class="column is-narrow">
+                <button class="button is-outlined">
+                  <span class="icon"> <i class="fas fa-plus"></i> </span>
+                  <span> Add permission </span>
+                </button>
+              </div>
+            </div>
+          </div>
+          <hr/>
+
+          <ul>
+          {% for permission in permissions %}
+            <li> {{ permission.name }} </li>
+          {% endfor %}
+          </ul>
+        </div>
+      </div>
+
+
     </div>
   </div>
 {% endblock %}
