@@ -1,6 +1,6 @@
 import flask
 import auth
-from lib import flask_db
+from lib import flask_db, oauth2
 import mysql.connector.errors
 
 app = flask.Flask(__name__)
@@ -139,7 +139,39 @@ def delete_user(user_id):
 
 
 @auth_app.route('/registered-apps')
-def registered_app():
-    return
+def registered_apps():
+    registered_apps = flask_db.fetch_all('''
+    select id, appname, redirect_uri, client_id, client_secret
+    from oauth_apps
+    limit 100
+    ''', ())
+
+    ctx = {
+        'registered_apps': registered_apps
+    }
+    return flask.render_template('registered_apps.html.j2', **ctx)
+
+
+@auth_app.route('/registered-apps', methods=['POST'])
+def create_app():
+    appname = flask.request.form['appname']
+    redirect_uri = flask.request.form['redirect_uri']
+    client_id = oauth2.create_client_id()
+    client_secret = oauth2.create_client_secret()
+
+    flask_db.insert('''
+    insert into oauth_apps
+    (appname, redirect_uri, client_id, client_secret)
+    values
+    (%s, %s, %s, %s)
+    ''', (appname, redirect_uri, client_id, client_secret))
+    return flask.redirect(flask.url_for('auth.registered_apps'))
+
+
+@auth_app.route('/registered-apps/<int:app_id>/delete', methods=['GET'])
+def delete_app(app_id):
+    flask_db.delete('delete from oauth_apps where id=%s', (app_id,))
+    return flask.redirect(flask.url_for('auth.registered_apps'))
+
 
 app.register_blueprint(auth_app)

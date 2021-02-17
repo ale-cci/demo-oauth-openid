@@ -1,0 +1,91 @@
+{% extends 'base.html.j2' %}
+{% block content %}
+  {% include 'fragments/navbar.html.j2' %}
+  <div class="content">
+    <div class="section">
+
+      <div class="card">
+        <div class="card-content">
+          <form action="{{ url_for('auth.create_app') }}" method="POST">
+
+            <div class="field is-horizontal">
+              <div class="field-label is-normal">
+                <label class="label">Application Name</label>
+              </div>
+              <div class="field-body">
+                <div class="field">
+                  <div class="control">
+                    <input name="appname" class="input" type="text" placeholder="Example application">
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="field is-horizontal">
+              <div class="field-label is-normal">
+                <label class="label">Redirect URI</label>
+              </div>
+              <div class="field-body">
+                <div class="field">
+                  <div class="control">
+                    <input class="input" name="redirect_uri" type="text" placeholder="http://localhost:8080">
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+            <div class="field is-horizontal">
+              <div class="field-label">
+                <!-- Left empty for spacing -->
+              </div>
+              <div class="field-body">
+                <div class="field">
+                  <div class="control">
+                    <button class="button">
+                      Create App
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </form>
+      </div>
+    </div>
+
+    <br>
+
+    <div class="card">
+      <div class="card-content">
+        <label class="label is-4"> Registered Applications: </label>
+        <table class="table is-bordered is-striped">
+          <thead>
+            <th> </th>
+            <th> App Name </th>
+            <th> Redirect URI </th>
+            <th> Client ID </th>
+            <th> Client Secret </th>
+          </thead>
+          <tbody>
+            {% for app in registered_apps %}
+              <tr>
+                <td>
+                  <a class="icon has-text-danger" href="{{url_for('auth.delete_app', app_id=app.id)}}">
+                    <i class="fa fa-trash"></i>
+                  </a>
+                </td>
+                <td> {{ app.name }} </td>
+                <td> {{ app.redirect_uri }} </td>
+                <td> {{ app.client_id }} </td>
+                <td> {{ app.client_secret }} </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+  </div>
+{% endblock %}
