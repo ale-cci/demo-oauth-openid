@@ -29,7 +29,7 @@
             </div>
             <div>
               <div class="column is-narrow">
-                <form action="{{url_for('add_user_permission', user_id=details.id)}}" method="POST">
+                <form action="{{url_for('auth.add_user_permission', user_id=details.id)}}" method="POST">
                   <div class="field">
                     <span class="control has-icons-right">
                       <input class="input" name="permision_name" placeholder="Add permission">
@@ -49,7 +49,7 @@
           <section class="menu">
               {% for permission in permissions %}
                   <div class="icon-text">
-                      <a class="icon has-text-danger" href="{{ url_for('delete_user_permissions', user_id=details.id, permission_id=permission.id) }}">
+                      <a class="icon has-text-danger" href="{{ url_for('auth.delete_user_permissions', user_id=details.id, permission_id=permission.id) }}">
                           <i class="fa fa-trash"> </i>
                       </a>
                       {{ permission.name }}

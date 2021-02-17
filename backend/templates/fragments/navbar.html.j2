@@ -17,7 +17,7 @@
             Home
           </a>
           <div class="navbar-dropdown is-boxed">
-            <a class="navbar-item" href="{{ url_for('users') }}">
+            <a class="navbar-item" href="{{ url_for('auth.users') }}">
               Manage users
             </a>
             <a class="navbar-item" href="{{ url_for('index') }}">
@@ -31,7 +31,7 @@
         <div class="navbar-item">
           <div class="field is-grouped">
             <p class="control">
-            <a class="button is-outlined" href="{{ url_for('logout') }} ">
+            <a class="button is-outlined" href="{{ url_for('auth.logout') }} ">
               <span>
                 Logout
               </span>

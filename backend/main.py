@@ -7,6 +7,7 @@ app = flask.Flask(__name__)
 app.config.update(
     SECRET_KEY='test'
 )
+auth_app = flask.Blueprint('auth', __name__)
 
 @app.route('/')
 def index():
@@ -21,7 +22,7 @@ def login():
     return flask.render_template('login.html.j2')
 
 
-@app.route('/logout')
+@auth_app.route('/logout')
 def logout():
     del flask.session['user_id']
     return flask.redirect(flask.url_for('login'))
@@ -46,7 +47,7 @@ def perform_login():
     return flask.redirect(flask.url_for('login'))
 
 
-@app.route('/users')
+@auth_app.route('/users')
 def users():
     email_like = flask.request.args.get('email', '')
     email_like = f'%{email_like}%'
@@ -63,7 +64,7 @@ def users():
     return flask.render_template('users.html.j2', **ctx)
 
 
-@app.route('/users/<int:user_id>')
+@auth_app.route('/users/<int:user_id>')
 def user_detail(user_id):
     user_data = flask_db.fetch_one('''
     select id, email, ins_ts, upd_ts from users where id=%s
@@ -83,7 +84,7 @@ def user_detail(user_id):
     return flask.render_template('user_detail.html.j2', **ctx)
 
 
-@app.route('/users/<int:user_id>/permissions', methods=['POST'])
+@auth_app.route('/users/<int:user_id>/permissions', methods=['POST'])
 def add_user_permission(user_id):
     permission_name = flask.request.form['permision_name']
 
@@ -99,19 +100,19 @@ def add_user_permission(user_id):
     ''', (user_id, permission_id))
 
     return flask.redirect(
-        flask.url_for('user_detail', user_id=user_id)
+        flask.url_for('auth.user_detail', user_id=user_id)
     )
 
 
-@app.route('/users/<int:user_id>/permissions/<int:permission_id>/delete', methods=['GET'])
+@auth_app.route('/users/<int:user_id>/permissions/<int:permission_id>/delete', methods=['GET'])
 def delete_user_permissions(user_id, permission_id):
     flask_db.delete('''
     delete from user_permissions where user = %s and permission = %s
     ''', (user_id, permission_id))
-    return flask.redirect(flask.url_for('user_detail', user_id=user_id))
+    return flask.redirect(flask.url_for('auth.user_detail', user_id=user_id))
 
 
-@app.route('/users/create', methods=['POST'])
+@auth_app.route('/users/create', methods=['POST'])
 def create_users():
     email = flask.request.form['email']
     password = flask.request.form['password']
@@ -126,12 +127,19 @@ def create_users():
     except mysql.connector.errors.IntegrityError:
         flask.flash(('danger', f'User with email {email} already registered'))
 
-    return flask.redirect(flask.url_for('users'))
+    return flask.redirect(flask.url_for('auth.users'))
 
 
-@app.route('/users/<int:user_id>/delete', methods=['GET'])
+@auth_app.route('/users/<int:user_id>/delete', methods=['GET'])
 def delete_user(user_id):
     flask_db.delete('''
     delete from users where id=%s
     ''', (user_id,))
-    return flask.redirect(flask.url_for('users'))
+    return flask.redirect(flask.url_for('auth.users'))
+
+
+@auth_app.route('/registered-apps')
+def registered_app():
+    return
+
+app.register_blueprint(auth_app)
