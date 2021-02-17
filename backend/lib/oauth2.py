@@ -10,5 +10,5 @@ def create_client_id():
     return '-'.join((adjective, color, animal))
 
 
-def create_client_secret(secret_len=512):
+def create_client_secret(secret_len=128):
     return ''.join(random.choices(string.printable[:36], k=secret_len))
