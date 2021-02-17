@@ -1,6 +1,7 @@
 import flask
 import auth
 from lib import flask_db
+import mysql.connector.errors
 
 app = flask.Flask(__name__)
 app.config.update(
@@ -100,3 +101,37 @@ def add_user_permission(user_id):
     return flask.redirect(
         flask.url_for('user_detail', user_id=user_id)
     )
+
+
+@app.route('/users/<int:user_id>/permissions/<int:permission_id>/delete', methods=['GET'])
+def delete_user_permissions(user_id, permission_id):
+    flask_db.delete('''
+    delete from user_permissions where user = %s and permission = %s
+    ''', (user_id, permission_id))
+    return flask.redirect(flask.url_for('user_detail', user_id=user_id))
+
+
+@app.route('/users/create', methods=['POST'])
+def create_users():
+    email = flask.request.form['email']
+    password = flask.request.form['password']
+
+    hashed_pass = auth.hash_password(password)
+
+    try:
+        flask_db.insert('''
+        insert into users (email, passwd)
+        values (%s, %s)
+        ''', (email, hashed_pass))
+    except mysql.connector.errors.IntegrityError:
+        flask.flash(('danger', f'User with email {email} already registered'))
+
+    return flask.redirect(flask.url_for('users'))
+
+
+@app.route('/users/<int:user_id>/delete', methods=['GET'])
+def delete_user(user_id):
+    flask_db.delete('''
+    delete from users where id=%s
+    ''', (user_id,))
+    return flask.redirect(flask.url_for('users'))

@@ -42,3 +42,11 @@ def insert(query, params):
         c.execute(query, params)
         out = c.lastrowid
     return out
+
+
+def delete(query, params):
+    conn = _get_conn()
+    with conn.cursor() as c:
+        c.execute(query, params)
+        out = c.rowcount
+    return out

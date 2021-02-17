@@ -4,13 +4,54 @@
 
   <div class="content">
     <div class="section">
+      {% with messages = get_flashed_messages() %}
+        {% for type, message in messages %}
+          <div class="notification is-{{type}}">
+            {{message}}
+          </div>
+        {% endfor %}
+      {% endwith %}
+
+      <div class="card">
+        <div class="card-content">
+          <form action="{{url_for('create_users') }}" method="POST">
+            <div class="field is-horizontal">
+
+              <div class="field-body">
+                <div class="field">
+                  <div class="control has-icons-left has-icons-right is-expanded">
+                    <input class="input" name="email" placeholder="Email" type="email">
+                    <span class="icon is-small is-left">
+                      <i class="fas fa-envelope"></i>
+                    </span>
+                  </div>
+                </div>
+
+                <div class="field is-expanded">
+                  <div class="control has-icons-left has-icons-right is-expanded">
+                    <input class="input" name="password" type="password" placeholder="Password">
+                    <span class="icon is-small is-left">
+                      <i class="fas fa-key"></i>
+                    </span>
+                  </div>
+                </div>
+
+                <div class="field is-narrow">
+                  <input type="submit" class="button" value="Create new User">
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <br>
+
       <form method="GET">
         <div class="card">
           <div class="card-content">
-
             <div class="field">
-              <label class="Label"> Email </label>
-
+              <label class="label"> Search users where email like:</label>
               <div class="control has-icons-left has-icons-right">
                 <input class="input" name="email" placeholder="Email" value="{{email}}">
                 <span class="icon is-small is-left">
@@ -22,9 +63,14 @@
             {% if users %}
               <hr>
               <ul>
-              {% for user in users %}
-                <li> <a href="{{ url_for('user_detail', user_id=user.id) }}"> {{ user.email}}  </a></li>
-              {% endfor %}
+                {% for user in users %}
+                  <li>
+                    <a href="{{ url_for('delete_user', user_id=user.id) }}" class="icon has-text-danger">
+                      <i class="fa fa-trash"></i>
+                    </a>
+                    <a href="{{ url_for('user_detail', user_id=user.id) }}"> {{ user.email}}  </a>
+                  </li>
+                {% endfor %}
               </ul>
             {% endif %}
           </div>

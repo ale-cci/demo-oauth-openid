@@ -1,5 +1,7 @@
 from lib import flask_db
 import hashlib
+import string
+import random
 
 class AuthException(Exception):
     pass
@@ -9,9 +11,21 @@ def _hash_matches(hashval, password):
     if len(chunks) != 3:
         raise AuthException('Wrong password format')
 
-    _, salt, hashpwd = hashval.split('$')
+    _, salt, _ = hashval.split('$')
+    return hash_password(password, salt) == hashval
+
+
+def _gen_salt(k=10):
+    return ''.join(random.choices(string.printable[:36], k=k))
+
+
+def hash_password(password, salt=None):
+    if salt is None:
+        salt = _gen_salt()
+
     salt_pass = (salt + password).encode('utf-8')
-    return hashlib.sha256(salt_pass).hexdigest() == hashpwd
+    hashed_pass = hashlib.sha256(salt_pass).hexdigest()
+    return '$'.join(('sha256', salt, hashed_pass))
 
 
 def check_password(email, password):

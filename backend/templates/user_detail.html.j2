@@ -32,7 +32,7 @@
                 <form action="{{url_for('add_user_permission', user_id=details.id)}}" method="POST">
                   <div class="field">
                     <span class="control has-icons-right">
-                      <input class="input" name="permision_name">
+                      <input class="input" name="permision_name" placeholder="Add permission">
                       <span class="icon is-small is-right">
                         <i class="fas fa-plus"></i>
                       </span>
@@ -46,11 +46,16 @@
           </div>
           <hr/>
 
-          <ul>
-          {% for permission in permissions %}
-            <li> {{ permission.name }} </li>
-          {% endfor %}
-          </ul>
+          <section class="menu">
+              {% for permission in permissions %}
+                  <div class="icon-text">
+                      <a class="icon has-text-danger" href="{{ url_for('delete_user_permissions', user_id=details.id, permission_id=permission.id) }}">
+                          <i class="fa fa-trash"> </i>
+                      </a>
+                      {{ permission.name }}
+                  </div>
+              {% endfor %}
+          </section>
         </div>
       </div>
 
