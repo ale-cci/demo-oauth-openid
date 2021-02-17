@@ -9,6 +9,7 @@ app.config.update(
 )
 auth_app = flask.Blueprint('auth', __name__)
 
+
 @app.route('/')
 def index():
     if 'user_id' not in flask.session:
@@ -19,7 +20,11 @@ def index():
 
 @app.route('/login')
 def login():
-    return flask.render_template('login.html.j2')
+    index_url = flask.url_for('index')
+    ctx = {
+        'after_redirect': flask.request.args.get('after_redirect', index_url)
+    }
+    return flask.render_template('login.html.j2', **ctx)
 
 
 @auth_app.route('/logout')
@@ -39,7 +44,8 @@ def perform_login():
     try:
         if user_id := auth.check_password(email, passwd):
             flask.session['user_id'] = user_id
-            return flask.redirect(flask.url_for('index'))
+            redirect_url = flask.request.args['after_redirect']
+            return flask.redirect(redirect_url)
 
     except auth.AuthException as e:
         flask.flash(('danger', str(e)))
@@ -175,5 +181,18 @@ def delete_app(app_id):
     flask_db.delete('delete from oauth_apps where id=%s', (app_id,))
     return flask.redirect(flask.url_for('auth.registered_apps'))
 
+
+# OAuth endpoint
+@app.route('/auth')
+def oauth_prompt():
+    if 'user_id' not in flask.session:
+        self_url = flask.url_for('oauth_prompt')
+        return flask.redirect(flask.url_for('login', after_redirect=self_url))
+
+    ctx = {
+        'redirect_uri': 'http://localhost:3000',
+        'scopes': ['test1', 'test2', 'test3']
+    }
+    return flask.render_template('oauth_prompt.html.j2', **ctx)
 
 app.register_blueprint(auth_app)

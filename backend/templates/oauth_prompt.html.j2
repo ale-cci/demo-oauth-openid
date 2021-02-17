@@ -1,0 +1,52 @@
+{% extends 'base.html.j2' %}
+
+{% block content %}
+<div class="columns is-vcentered">
+  <div class="hero-body">
+    <div class="column is-4 is-offset-4">
+
+      <div class="card">
+        <div class="card-content">
+          <div class="title is-4"> OAuth2 &amp; OpenID</div>
+          <form action="{{ redirect_uri }}" method="GET">
+
+            <div class="field">
+              {% if scopes %}
+                The following scopes are requested:
+                <ul>
+                  {% for scope in scopes %}
+                    <li> {{scope }} </li>
+                  {% endfor %}
+                </ul>
+              {% else %}
+                No scope requested.
+              {% endif %}
+            </div>
+
+            <br>
+            <div class="field">
+              <label class="checkbox">
+                <input type="checkbox">
+                I agree to the <a href="#">terms and conditions</a>
+              </label>
+            </div>
+
+            <hr>
+            <input type="submit" class="button is-fullwidth" value="Grant">
+          </form>
+        </div>
+      </div>
+
+      {% with messages = get_flashed_messages() %}
+        <br>
+        {% for type, message in messages %}
+        <div class="notification is-{{type}}">
+          {{message}}
+        </div>
+        {% endfor %}
+      {% endwith %}
+
+    </div>
+  </div>
+</div>
+{% endblock %}

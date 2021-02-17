@@ -8,8 +8,7 @@
       <div class="card">
         <div class="card-content">
           <div class="title is-4"> Login </div>
-          <form action="{{ url_for('perform_login') }}" method="POST">
-
+          <form action="{{ url_for('perform_login', after_redirect=after_redirect) }}" method="POST">
 
             <div class="field">
               <p class="control has-icons-left">
