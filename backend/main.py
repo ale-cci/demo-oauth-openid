@@ -141,7 +141,7 @@ def delete_user(user_id):
 @auth_app.route('/registered-apps')
 def registered_apps():
     registered_apps = flask_db.fetch_all('''
-    select id, appname, redirect_uri, client_id, client_secret
+    select id, appname, redirect_uri, client_id, client_secret, client_type
     from oauth_apps
     limit 100
     ''', ())
@@ -156,15 +156,17 @@ def registered_apps():
 def create_app():
     appname = flask.request.form['appname']
     redirect_uri = flask.request.form['redirect_uri']
+    client_type = flask.request.form['client_type']
+
     client_id = oauth2.create_client_id()
-    client_secret = oauth2.create_client_secret()
+    client_secret = oauth2.create_client_secret() if client_type == 'confidential' else ''
 
     flask_db.insert('''
     insert into oauth_apps
-    (appname, redirect_uri, client_id, client_secret)
+    (appname, redirect_uri, client_id, client_secret, client_type)
     values
-    (%s, %s, %s, %s)
-    ''', (appname, redirect_uri, client_id, client_secret))
+    (%s, %s, %s, %s, %s)
+    ''', (appname, redirect_uri, client_id, client_secret, client_type))
     return flask.redirect(flask.url_for('auth.registered_apps'))
 
 

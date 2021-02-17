@@ -83,6 +83,7 @@
             <th> Redirect URI </th>
             <th> Client ID </th>
             <th> Client Secret </th>
+            <th> Client Type </th>
           </thead>
           <tbody>
             {% for app in registered_apps %}
@@ -96,6 +97,7 @@
                 <td> {{ app.redirect_uri }} </td>
                 <td> {{ app.client_id }} </td>
                 <td> {{ app.client_secret }} </td>
+                <td> {{ app.client_type }} </td>
               </tr>
             {% endfor %}
           </tbody>
