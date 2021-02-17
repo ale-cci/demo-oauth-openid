@@ -187,7 +187,18 @@ def delete_app(app_id):
 def oauth_prompt():
     if 'user_id' not in flask.session:
         self_url = flask.url_for('oauth_prompt')
-        return flask.redirect(flask.url_for('login', after_redirect=self_url))
+
+        fwd_params = {
+            'scopes': '',
+            'client_id': '',
+            'redirect_url': '',
+            'state': '',
+        }
+
+        return flask.redirect(flask.url_for(
+            'login', after_redirect=self_url,
+            **fwd_params
+        ))
 
     ctx = {
         'redirect_uri': 'http://localhost:3000',
