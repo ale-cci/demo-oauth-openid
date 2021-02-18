@@ -183,27 +183,7 @@ def delete_app(app_id):
 
 
 # OAuth endpoint
-@app.route('/auth')
-def oauth_prompt():
-    if 'user_id' not in flask.session:
-        self_url = flask.url_for('oauth_prompt')
+from oauth_views import blueprint as oauth
 
-        fwd_params = {
-            'scopes': '',
-            'client_id': '',
-            'redirect_url': '',
-            'state': '',
-        }
-
-        return flask.redirect(flask.url_for(
-            'login', after_redirect=self_url,
-            **fwd_params
-        ))
-
-    ctx = {
-        'redirect_uri': 'http://localhost:3000',
-        'scopes': ['test1', 'test2', 'test3']
-    }
-    return flask.render_template('oauth_prompt.html.j2', **ctx)
-
+app.register_blueprint(oauth)
 app.register_blueprint(auth_app)

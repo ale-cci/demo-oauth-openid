@@ -8,7 +8,10 @@
       <div class="card">
         <div class="card-content">
           <div class="title is-4"> OAuth2 &amp; OpenID</div>
-          <form action="{{ redirect_uri }}" method="GET">
+          <form action="{{ url_for('oauth.build_token') }}" method="POST">
+            <input type="hidden" name="state" value="{{state}}">
+            <input type="hidden" name="scopes" value="{{''.join(scopes)}}">
+            <input type="hidden" name="redirect_uri" value="{{redirect_uri}}">
 
             <div class="field">
               {% if scopes %}
@@ -26,7 +29,7 @@
             <br>
             <div class="field">
               <label class="checkbox">
-                <input type="checkbox">
+                <input type="checkbox" name='grant'>
                 I agree to the <a href="#">terms and conditions</a>
               </label>
             </div>

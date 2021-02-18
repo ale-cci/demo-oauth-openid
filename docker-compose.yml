@@ -6,7 +6,7 @@ services:
     volumes:
       - ./backend/:/home/web/app
     ports:
-      - 8000:5000
+      - 4000:5000
 
   db:
     image: mysql:8.0

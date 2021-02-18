@@ -9,6 +9,15 @@ function getJWT() {
   return window.localStorage.getItem('jwt')
 }
 
+function buildURL() {
+  const basePath = new URL('http://localhost:8000/oauth')
+  basePath.searchParams.append('client_id', 'test')
+  basePath.searchParams.append('redirect_uri', 'http://localhost:3000')
+  basePath.searchParams.append('scope', 'openid authorizations')
+  basePath.searchParams.append('state', '')
+  return basePath.toString()
+}
+
 function App() {
   const jwt = getJWT()
 
@@ -17,7 +26,7 @@ function App() {
       {
         jwt
           ? <Navigator/>
-          : <RequiredLogin sso_provider="http://localhost:8000/auth"/>
+          : <RequiredLogin sso_provider={ buildURL()}/>
       }
     </div>
   )

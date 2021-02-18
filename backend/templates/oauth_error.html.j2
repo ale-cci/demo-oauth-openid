@@ -1,0 +1,42 @@
+{% extends 'base.html.j2' %}
+
+{% block content %}
+<div class="columns is-vcentered">
+  <div class="hero-body">
+    <div class="column is-4 is-offset-4">
+
+      <div class="card">
+        <div class="card-content">
+          <div class="title is-4"> OAuth2 &amp; OpenID</div>
+
+            <div class="field">
+              The request could not be performed for the following reasons:
+            </div>
+
+            <div class="field">
+              <ul>
+                {% for error in errors %}
+                  <li> {{ error }} </li>
+                {% endfor %}
+              </ul>
+            </div>
+
+            <div class="field">
+              Please check again your request
+            </div>
+        </div>
+      </div>
+
+      {% with messages = get_flashed_messages() %}
+        <br>
+        {% for type, message in messages %}
+        <div class="notification is-{{type}}">
+          {{message}}
+        </div>
+        {% endfor %}
+      {% endwith %}
+
+    </div>
+  </div>
+</div>
+{% endblock %}
