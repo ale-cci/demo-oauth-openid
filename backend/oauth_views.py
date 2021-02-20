@@ -58,8 +58,10 @@ def build_token():
             where up.user = %s
         )
         ''', (flask.session['user_id'],))
+        permissions_names = {p.name for p in permissions}
+
         claims = {
-            'auths': ' '.join(permissions)
+            'auths': ' '.join(permissions_names)
         }
 
         jwt = oauth2.create_jwt('/home/web/.ssh/id_rsa', claims=claims)
@@ -75,6 +77,11 @@ def build_token():
 @blueprint.route('/certs')
 def public_certs():
     key = oauth2.pubkey_info('/home/web/.ssh/id_rsa.pub')
-    return flask.jsonify({
+
+    response = flask.Response(
+        flask.json.dumps({
         'keys': [ key ]
-    })
+    }), mimetype='application/json'
+    )
+    response.headers["Access-Control-Allow-Origin"] = "*"
+    return response

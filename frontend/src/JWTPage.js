@@ -47,7 +47,7 @@ export default function JWTPage({accessToken}) {
   React.useEffect(() => {
     // const [head, body] = accessToken.split('.')
     verifyToken(accessToken, 'http://localhost:4000/oauth/certs')
-      .then(_ => setValidationError(''))
+      .then(_ => setValidationError(undefined))
       .catch(e => setValidationError(e.message))
   }, [accessToken, secret])
 
@@ -80,27 +80,28 @@ export default function JWTPage({accessToken}) {
       </div>
       <hr/>
 
-      <div className="field">
-        <label className="label"> Signature: </label>
-        <div className="control is-expanded">
-          <textarea
-            className={
-              (() => {
-                switch(validationError) {
-                  case undefined:
-                    return 'textarea'
-                  case '':
-                    return 'textarea'
-                  default:
-                    return 'textarea is-danger'
-                }}
-              )()
-            } value={secret} onChange={e => setSecret(e.target.value)} placeholder="RSA public key"/>
-        </div>
-      </div>
-        <div className="notification">
-          {validationError}
-        </div>
+      {
+        validationError === undefined
+          ? (
+            <div class="field">
+              <div class="has-text-success">
+                <span class="icon"> <i class="fas fa-check-circle"></i> </span>
+                JWT validation successful!
+              </div>
+            </div>
+          )
+          : (
+            <>
+              <div class="field has-text-danger">
+                <span class="icon"> <i class="fas fa-exclamation-circle"></i> </span>
+                JWT Validation error!
+              </div>
+              <div class="field notification is-danger is-light">
+                {validationError}
+              </div>
+            </>
+          )
+      }
     </>
   )
 }

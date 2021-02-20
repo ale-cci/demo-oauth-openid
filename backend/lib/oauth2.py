@@ -1,5 +1,6 @@
 # Signing using rsa
 # https://stackoverflow.com/questions/49116579/sign-a-byte-string-with-sha256-in-python
+import math
 import random
 import string
 import time
@@ -30,10 +31,18 @@ def create_client_secret(secret_len=128):
 
 def _create_jwt_head():
     return {
-        'alg': 'HS256',
+        'alg': 'RS256',
         'kid': '1',
         'typ': 'JWT',
     }
+
+
+def int_to_b64(val):
+    size = int(math.log(val, 256)) + 1
+    hex_bytes = val.to_bytes(size, 'big')
+    b64_bytes = base64.b64encode(hex_bytes)
+    return b64_bytes.rstrip(b'=').replace(b'+', b'-').replace(b'/', b'_').decode('utf-8')
+
 
 def _create_jwt_body(claims):
     '''
@@ -51,7 +60,10 @@ def _create_jwt_body(claims):
     reserved_claims = {
         'at_hash', 'aud', 'azp', 'exp', 'iat', 'iss', 'sub', 'nbf'
     }
-    token_claims = claims - reserved_claims
+    token_claims = {
+        k: v for k, v in claims.items()
+        if k not in reserved_claims
+    }
 
     iat = time.time()
     exp = iat + 3600
@@ -107,12 +119,12 @@ def pubkey_info(keypath):
         public_key = serialization.load_ssh_public_key(pubkey.read())
 
     pn = public_key.public_numbers()
-    n = base64.b64encode(str(pn.n).encode('utf-8')).decode('utf-8').rstrip('=').replace('+', '-').replace('/', '_')
-    e = base64.b64encode(str(pn.e).encode('utf-8')).decode('utf-8').rstrip('=').replace('+', '-').replace('/', '_')
+    n = int_to_b64(pn.n)
+    e = int_to_b64(pn.e)
 
     return {
         'kty': 'RSA',
-        'alg': '',
+        'alg': 'RS256',
         'use': 'sig',
         'kid': '1',
         'n': n,
