@@ -2,23 +2,14 @@ import React from 'react'
 import ErrorPage from './ErrorPage'
 import JWTPage from './JWTPage'
 
-function RequiredLogin({sso_provider}) {
-  return (<div> Required <a href={sso_provider}> login </a></div>)
-}
-function Navigator() {
-  return (<div> used logged </div>)
-}
-
-function getJWT() {
-  return window.localStorage.getItem('jwt')
-}
 
 function buildURL(authUrl) {
   const basePath = new URL(authUrl)
-  basePath.searchParams.append('client_id', 'test')
+  basePath.searchParams.append('client_id', 'first-gray-gorilla')
   basePath.searchParams.append('redirect_uri', 'http://localhost:3000')
   basePath.searchParams.append('scope', 'openid authorizations')
   basePath.searchParams.append('state', 'example')
+  basePath.searchParams.append('grant_type', 'public')
   return basePath.toString()
 }
 

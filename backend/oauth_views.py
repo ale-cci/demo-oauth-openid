@@ -17,6 +17,20 @@ def consent_prompt():
     if errors:
         return flask.render_template('oauth_error.html.j2', errors=errors)
 
+    # Check if client is correctly registered
+    oauth_app = flask_db.fetch_one('''
+    select redirect_uri
+    from oauth_apps
+    where client_id=%s and client_type=%s
+    ''', (
+        flask.request.args['client_id'],
+        flask.request.args['grant_type']
+    ))
+
+    if not oauth_app or oauth_app.redirect_uri != flask.request.args['redirect_uri']:
+        return flask.render_template('oauth_error.html.j2', errors=[
+            'Client not registered correctly or wrong parameters'
+        ])
 
     if 'user_id' not in flask.session:
         forward_args = {name: flask.request.args[name] for name in required_args}
