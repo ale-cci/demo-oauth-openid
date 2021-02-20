@@ -29,8 +29,7 @@ function App() {
   const urlparams = new URLSearchParams(window.location.search)
   const error = urlparams.get('error')
   const accessToken = urlparams.get('access_token')
-  const state = urlparams.get('state')
-  console.log(accessToken)
+  // const state = urlparams.get('state')
 
   React.useEffect(() => {
     window.localStorage.setItem('jwt', accessToken)
@@ -60,7 +59,7 @@ function App() {
         {
           error
             ? <ErrorPage error={error}/>
-            : <JWTPage accessToken={accessToken}/>
+            : <JWTPage accessToken={accessToken} authURL={authURL}/>
         }
       </div>
     </div>

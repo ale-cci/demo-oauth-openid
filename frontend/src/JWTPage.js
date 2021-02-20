@@ -8,7 +8,6 @@ function verifyToken(token, jwksUri) {
     strictSsl: false,
   });
   function getKey(header, callback){
-    console.log(header.kid)
     client.getSigningKey(header.kid, function(err, key) {
       var signingKey = key.publicKey || key.rsaPublicKey;
       callback(null, signingKey);
@@ -20,7 +19,8 @@ function verifyToken(token, jwksUri) {
 
   return new Promise(
     (resolve, reject) => {
-      jwt.verify(token, getKey, options,
+      jwt.verify(
+        token, getKey, options,
         (err, decoded) => {
           if (err) {
             reject(err)
@@ -32,11 +32,17 @@ function verifyToken(token, jwksUri) {
   )
 }
 
-export default function JWTPage({accessToken}) {
+export default function JWTPage({accessToken, authURL}) {
   const [secret, setSecret] = React.useState('')
   const [validationError, setValidationError] = React.useState(undefined)
   const [header, setHeader] = React.useState('')
   const [payload, setPayload] = React.useState('')
+
+  const [tokenURL, setTokenURL] = React.useState('')
+
+  React.useLayoutEffect(() => {
+    setTokenURL(authURL + '.well-known/jwks.json')
+  }, [authURL])
 
   React.useEffect(() => {
     const [head, body] = accessToken.split('.')
@@ -46,10 +52,13 @@ export default function JWTPage({accessToken}) {
 
   React.useEffect(() => {
     // const [head, body] = accessToken.split('.')
-    verifyToken(accessToken, 'http://localhost:4000/oauth/certs')
+    if (!tokenURL) {
+      return
+    }
+    verifyToken(accessToken, tokenURL)
       .then(_ => setValidationError(undefined))
       .catch(e => setValidationError(e.message))
-  }, [accessToken, secret])
+  }, [accessToken, secret, tokenURL])
 
   return (
     <>
@@ -80,23 +89,27 @@ export default function JWTPage({accessToken}) {
       </div>
       <hr/>
 
+      <div className="field">
+        <input className="input" value={tokenURL} onChange={e => setTokenURL(e.target.value)}/>
+      </div>
+
       {
         validationError === undefined
           ? (
-            <div class="field">
-              <div class="has-text-success">
-                <span class="icon"> <i class="fas fa-check-circle"></i> </span>
+            <div className="field">
+              <div className="has-text-success">
+                <span className="icon"> <i className="fas fa-check-circle"></i> </span>
                 JWT validation successful!
               </div>
             </div>
           )
           : (
             <>
-              <div class="field has-text-danger">
-                <span class="icon"> <i class="fas fa-exclamation-circle"></i> </span>
+              <div className="field has-text-danger">
+                <span className="icon"> <i className="fas fa-exclamation-circle"></i> </span>
                 JWT Validation error!
               </div>
-              <div class="field notification is-danger is-light">
+              <div className="field notification is-danger is-light">
                 {validationError}
               </div>
             </>

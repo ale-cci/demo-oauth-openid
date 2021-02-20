@@ -74,7 +74,7 @@ def build_token():
     return flask.redirect(redirect_url)
 
 
-@blueprint.route('/certs')
+@blueprint.route('/.well-known/jwks.json')
 def public_certs():
     key = oauth2.pubkey_info('/home/web/.ssh/id_rsa.pub')
 
