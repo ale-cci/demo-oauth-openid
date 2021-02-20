@@ -1,5 +1,5 @@
 import flask
-from lib import oauth2
+from lib import oauth2, flask_db
 from urllib.parse import urlencode
 blueprint = flask.Blueprint('oauth', __name__, url_prefix='/oauth')
 
@@ -51,7 +51,18 @@ def build_token():
     if 'grant' not in flask.request.form:
         params['error'] = 'no consent given'
     else:
-        jwt = oauth2.create_jwt('/home/web/.ssh/id_rsa', claims=[])
+        permissions = flask_db.fetch_all('''
+        select name from permissions
+        where id in (
+            select up.permission from user_permissions up
+            where up.user = %s
+        )
+        ''', (flask.session['user_id'],))
+        claims = {
+            'auths': ' '.join(permissions)
+        }
+
+        jwt = oauth2.create_jwt('/home/web/.ssh/id_rsa', claims=claims)
         # create client id
         params['access_token'] = jwt
         pass

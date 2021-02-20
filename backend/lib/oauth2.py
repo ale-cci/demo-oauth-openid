@@ -31,10 +31,11 @@ def create_client_secret(secret_len=128):
 def _create_jwt_head():
     return {
         'alg': 'HS256',
+        'kid': '1',
         'typ': 'JWT',
     }
 
-def _create_jwt_body():
+def _create_jwt_body(claims):
     '''
     {'at_hash': 'Jrbq0PyuRTFWYTZ4z2qjRg',
      'aud': '359913789820-tfbqpn1mpan21vgjb408i42rd1ruc9mv.apps.googleusercontent.com',
@@ -47,14 +48,21 @@ def _create_jwt_body():
      'sub': '102559048848623069948'}
     '''
 
+    reserved_claims = {
+        'at_hash', 'aud', 'azp', 'exp', 'iat', 'iss', 'sub', 'nbf'
+    }
+    token_claims = claims - reserved_claims
+
     iat = time.time()
     exp = iat + 3600
-    return {
+
+    token_claims.update({
         'iss': 'https://localhost:8000',
         'sub': flask.session['user_id'],
         'iat': iat,
         'exp': exp,
-    }
+    })
+    return token_claims
 
 
 def _create_checksum(message, keypath):
@@ -82,7 +90,7 @@ def create_jwt(keypath, claims):
 
     iss = time.time()
     head = _create_jwt_head()
-    body = _create_jwt_body()
+    body = _create_jwt_body(claims)
 
     b64_head = base64.b64encode(json.dumps(head).encode('utf-8')).rstrip(b'=')
     b64_body = base64.b64encode(json.dumps(body).encode('utf-8')).rstrip(b'=')
@@ -106,7 +114,7 @@ def pubkey_info(keypath):
         'kty': 'RSA',
         'alg': '',
         'use': 'sig',
-        'kid': '???',
+        'kid': '1',
         'n': n,
         'e': e,
     }

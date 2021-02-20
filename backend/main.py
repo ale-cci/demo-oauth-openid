@@ -92,7 +92,7 @@ def user_detail(user_id):
 
 @auth_app.route('/users/<int:user_id>/permissions', methods=['POST'])
 def add_user_permission(user_id):
-    permission_name = flask.request.form['permision_name']
+    permission_name = flask.request.form['permision_name'].replace(' ', '_')
 
     permission_id = flask_db.insert('''
     insert into permissions (name)
