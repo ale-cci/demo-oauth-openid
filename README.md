@@ -12,18 +12,27 @@ The sole depenencies of this project are [docker](https://www.docker.com/) and [
 As soon as you have them downloaded on your system you could start the project
 by:
 
-1. Downloading it
-```
+```bash
+# 1. Download the project
 git clone git@bitbucket.org:ale-cci/demo-oauth-openid.git
 cd demo-oauth-openid
-```
-2. Booting up mysql and the flask server
-```
-docker-compose up -d
-```
-3. Go to your browser on [http://localhost:8000](http://localhost:8000) and perform the login with credentials `test@email.com`
-   and `test`
 
+
+# 2. Booting up mysql and the flask server
+docker-compose up -d
+
+
+# 3. Go to your browser on http://localhost:4000 and perform the login with
+#    username: test@email.com
+#    password: test
+
+
+# 4. (Optional) Start JWT playground
+cd frontend
+yarn start
+
+# 5. Done, you are all set up!
+```
 
 
 ##### Additional notes
