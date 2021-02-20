@@ -45,6 +45,9 @@ export default function JWTPage({accessToken, authURL}) {
   }, [authURL])
 
   React.useEffect(() => {
+    if (!accessToken) {
+      return
+    }
     const [head, body] = accessToken.split('.')
     setHeader(atob(head))
     setPayload(atob(body))
@@ -53,6 +56,10 @@ export default function JWTPage({accessToken, authURL}) {
   React.useEffect(() => {
     // const [head, body] = accessToken.split('.')
     if (!tokenURL) {
+      return
+    }
+    if (!accessToken) {
+      setValidationError('accessToken is null')
       return
     }
     verifyToken(accessToken, tokenURL)
