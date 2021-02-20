@@ -1,3 +1,4 @@
 flask
 Jinja2
 mysql-connector-python
+cryptography

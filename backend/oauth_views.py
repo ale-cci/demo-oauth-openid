@@ -51,7 +51,7 @@ def build_token():
     if 'grant' not in flask.request.form:
         params['error'] = 'no consent given'
     else:
-        jwt = oauth2.create_jwt('/home/web/apps/.ssh/id_rsa', claims=[])
+        jwt = oauth2.create_jwt('/home/web/.ssh/id_rsa', claims=[])
         # create client id
         params['access_token'] = jwt
         pass
@@ -63,7 +63,7 @@ def build_token():
 
 @blueprint.route('/certs')
 def public_certs():
+    key = oauth2.pubkey_info('/home/web/.ssh/id_rsa.pub')
     return flask.jsonify({
-        'keys': [
-        ]
+        'keys': [ key ]
     })
