@@ -8,7 +8,7 @@ blueprint = flask.Blueprint('oauth', __name__, url_prefix='/oauth')
 def consent_prompt():
     errors = []
 
-    required_args = ['redirect_uri', 'client_id', 'scope', 'state']
+    required_args = ['redirect_uri', 'client_id', 'scope', 'state', 'grant_type']
     errors = [
         f'Argument \'{argname}\' is not specified'
         for argname in required_args if argname not in flask.request.args
@@ -36,12 +36,7 @@ def consent_prompt():
         forward_args = {name: flask.request.args[name] for name in required_args}
         self_url = flask.url_for('oauth.consent_prompt', **forward_args)
 
-        fwd_params = {
-            'scopes': '',
-            'client_id': '',
-            'redirect_url': '',
-            'state': '',
-        }
+        fwd_params = dict(flask.request.args)
 
         return flask.redirect(flask.url_for(
             'login', after_redirect=self_url,
@@ -49,9 +44,9 @@ def consent_prompt():
         ))
 
     ctx = {
-        'redirect_uri': 'http://localhost:3000',
+        'redirect_uri': flask.request.args['redirect_uri'],
         'state': flask.request.args['state'],
-        'scopes': ['test1', 'test2', 'test3']
+        'scopes': flask.request.args['scope'].split(' ')
     }
     return flask.render_template('oauth_prompt.html.j2', **ctx)
 
