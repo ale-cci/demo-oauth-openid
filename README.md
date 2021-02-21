@@ -45,6 +45,8 @@ via OAuth2 & OpenID connect
 4. the generated JWT contains user authorizations and are signed with the generated RSA private key
 5. Client uses the http://localhost:4000/.well-known/jwks.json endpoint to validate the signed JWT
 
+NOTE: since this is only a demo, all the users could create clients and new users.
+
 ##### Additional notes
 - At the moment this project is not ready, and it has been tested only on linux.
 - More informations on OAuth2 and OpenID could be found in [my academic dissertion](https://bitbucket.org/ale-cci/tesi-oauth2/src/master/)
