@@ -1,4 +1,4 @@
-# Breve relazione
+# The DB schema
 ### ER Diagram
 ![](./res/er_diagram.svg)
 ### Database structure
@@ -57,7 +57,7 @@
 ```
 ### Interrogazioni realizzate per il funzionamento
 Semplici operazioni di insert, update, delete.
-Esempi sono presenti nel file [main.py](https://bitbucket.org/ale-cci/demo-oauth-openid/src/d2806738e39e75af747558cda42ac9ee7386aecf/backend/main.py#lines-79) [oauth\_views.py](https://bitbucket.org/ale-cci/demo-oauth-openid/src/d2806738e39e75af747558cda42ac9ee7386aecf/backend/oauth_views.py#lines-63)
+Esempi sono presenti nel file [main.py](https://bitbucket.org/ale-cci/demo-oauth-openid/src/d2806738e39e75af747558cda42ac9ee7386aecf/backend/main.py#lines-79) e [oauth\_views.py](https://bitbucket.org/ale-cci/demo-oauth-openid/src/d2806738e39e75af747558cda42ac9ee7386aecf/backend/oauth_views.py#lines-63)
 
 ### Descrizione del sito e funzionamento
 Per funzionamento guarda il [README.md](./README.md)
