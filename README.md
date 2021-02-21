@@ -7,6 +7,9 @@ this is not ment to go in production (at least for now).
 [License](./LICENSE.md)
 
 
+### Interested in the Database description?
+Check out [./doc.md](./doc.md)
+
 ### Getting started
 The sole depenencies of this project are [docker](https://www.docker.com/) and [docker-compose](https://docs.docker.com/compose/).
 As soon as you have them downloaded on your system you could start the project
@@ -33,6 +36,8 @@ yarn start
 
 # 5. Done, you are all set up!
 ```
+
+#### How does it work
 
 
 ##### Additional notes
