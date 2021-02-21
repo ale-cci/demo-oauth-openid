@@ -38,7 +38,12 @@ yarn start
 ```
 
 #### How does it work
-
+1. Project boots up from the docker image, creating a RSA keypair
+2. User logs in and creates a public client, and optionally adds new users on the platform
+3. Client secrets are used by external application to allow registered users to perform single signon
+via OAuth2 & OpenID connect
+4. the generated JWT contains user authorizations and are signed with the generated RSA private key
+5. Client uses the http://localhost:4000/.well-known/jwks.json endpoint to validate the signed JWT
 
 ##### Additional notes
 - At the moment this project is not ready, and it has been tested only on linux.
