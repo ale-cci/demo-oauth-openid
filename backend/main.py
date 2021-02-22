@@ -100,10 +100,13 @@ def add_user_permission(user_id):
     on duplicate key update upd_ts=current_timestamp()
     ''', (permission_name,))
 
-    flask_db.insert('''
-    insert into user_permissions (user, permission)
-    values (%s, %s)
-    ''', (user_id, permission_id))
+    try:
+        flask_db.insert('''
+        insert into user_permissions (user, permission)
+        values (%s, %s)
+        ''', (user_id, permission_id))
+    except mysql.connector.errors.IntegrityError:
+        flask.flash(('danger', f'Permission \'{permission_name}\' already registered!'))
 
     return flask.redirect(
         flask.url_for('auth.user_detail', user_id=user_id)
