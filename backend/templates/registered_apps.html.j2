@@ -96,7 +96,7 @@
                 <td> {{ app.appname }} </td>
                 <td> {{ app.redirect_uri }} </td>
                 <td> {{ app.client_id }} </td>
-                <td> {{ app.client_secret }} </td>
+                <td> <textarea class="input textarea is-static">{{ app.client_secret }}</textarea> </td>
                 <td> {{ app.client_type }} </td>
               </tr>
             {% endfor %}
