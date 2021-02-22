@@ -97,7 +97,7 @@ def add_user_permission(user_id):
     permission_id = flask_db.insert('''
     insert into permissions (name)
     values (UPPER(%s))
-    on duplicate key update id=id
+    on duplicate key update upd_ts=current_timestamp()
     ''', (permission_name,))
 
     flask_db.insert('''
